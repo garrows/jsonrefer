@@ -66,7 +66,7 @@ describe('JsonRefer', function () {
     it('should work', function () {
       var jsonRefer = require('../src/index.js')({
         idPattern: /^[a-f0-9]{3}$/, // Look for values that match this regex
-        referenceObject: /references/ // Skip this object
+        referenceObject: /references/ // Skip this object when referencing
       })
 
       var output = jsonRefer(INPUT)

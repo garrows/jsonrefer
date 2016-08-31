@@ -7,7 +7,8 @@ Automatically convert javascript objects to have JSON references
 ```javascript
 
 var jsonRefer = require('jsonrefer')({
-  idPattern: /^[a-f0-9]{3}$/ // Look for values that match this regex
+  idPattern: /^[a-f0-9]{3}$/, // Look for values that match this regex
+  referenceObject: /references/ // Skip this object when referencing
 })
 
 var input = {
