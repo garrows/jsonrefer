@@ -39,17 +39,28 @@ var JsonRefer = function (options) {
         this.isReferenceData = true
         return
       }
-      // Its a reference so skip it and its children
+      // It's a reference so skip it and its children
       if (this.parent && this.parent.isReferenceData) {
         this.isReferenceData = true
         return
       }
+
+      // Check if it matches an ID
       if (options.idPattern.test(x)) {
+        // Does it point to anything
         if (referencedData[x]) {
           var ref = referencedData[x].ref
           var nameOfObject = referencedData[x].nameOfObject
-          this.parent.node[nameOfObject] = {
-            '$ref': ref
+          var parent = findNonArrayParent(this.parent)
+          if (Array.isArray(this.parent.node)) {
+            parent.node[nameOfObject] = parent.node[nameOfObject] || []
+            parent.node[nameOfObject].push({
+              '$ref': ref
+            })
+          } else {
+            parent.node[nameOfObject] = {
+              '$ref': ref
+            }
           }
         }
       }
@@ -58,6 +69,12 @@ var JsonRefer = function (options) {
 
     return data
   }
+}
+
+var findNonArrayParent = function (item) {
+  if (!Array.isArray(item.node)) return item
+  if (!item.parent || !item.parent.node) return item // Shouldn't happen
+  return findNonArrayParent(item.parent)
 }
 
 module.exports = JsonRefer
