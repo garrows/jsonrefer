@@ -4,7 +4,7 @@ require('should')
 var jsonRefs = require('json-refs')
 
 describe('JsonRefer', function () {
-  describe('Normal operation', function () {
+  describe('Array of objects', function () {
     var INPUT = {
       name: 'turkey',
       features: [ {
