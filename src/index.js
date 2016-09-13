@@ -53,10 +53,19 @@ var JsonRefer = function (options) {
           var nameOfObject = referencedData[x].nameOfObject
           var parent = findNonArrayParent(this.parent)
           if (Array.isArray(this.parent.node)) {
-            parent.node[nameOfObject] = parent.node[nameOfObject] || []
-            parent.node[nameOfObject].push({
-              '$ref': ref
-            })
+            if (!parent.node[nameOfObject]) {
+              parent.node[nameOfObject] = []
+            } else if (!Array.isArray(parent.node[nameOfObject])) {
+              // Traverse gets the wrong parent when there is only 1 element in the array. Convert it to work around it.
+              parent.node[nameOfObject] = [parent.node[nameOfObject]]
+            }
+            // Ensure uniqueness
+            var exists = Array.from(parent.node[nameOfObject]).find(refObj => refObj.$ref === ref)
+            if (!exists) {
+              parent.node[nameOfObject].push({
+                '$ref': ref
+              })
+            }
           } else {
             parent.node[nameOfObject] = {
               '$ref': ref
